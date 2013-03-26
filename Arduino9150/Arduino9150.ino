@@ -54,7 +54,9 @@ void loop()
   if (MPU.read()) {                                        // get the latest data
 //  MPU.printQuaternion(MPU.m_rawQuaternion);              // print the raw quaternion from the dmp
 //  MPU.printVector(MPU.m_rawMag);                         // print the raw mag data
+//  MPU.printVector(MPU.m_rawAccel);                       // print the raw accel data
 //  MPU.printAngles(MPU.m_dmpEulerPose);                   // the Euler angles from the dmp quaternion
+//  MPU.printVector(MPU.m_calAccel);                       // print the calibrated accel data
 //  MPU.printVector(MPU.m_calMag);                         // print the calibrated mag data
     MPU.printAngles(MPU.m_fusedEulerPose);                 // print the output of the data fusion
     Serial.println();

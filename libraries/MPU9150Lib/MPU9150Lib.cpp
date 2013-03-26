@@ -134,6 +134,8 @@ boolean MPU9150Lib::init(int mpuRate)
     m_useMagCalibration &= m_calData.magValid;
     m_useAccelCalibration &= m_calData.accelValid;
 
+    //  Process calibration data for runtime
+
     if (m_useMagCalibration) {
        m_magXOffset = (short)(((long)m_calData.magMaxX + (long)m_calData.magMinX) / 2);
        m_magXRange = m_calData.magMaxX - m_magXOffset;
@@ -147,13 +149,12 @@ boolean MPU9150Lib::init(int mpuRate)
        accelOffset[0] = -((long)m_calData.accelMaxX + (long)m_calData.accelMinX) / 2;
        accelOffset[1] = -((long)m_calData.accelMaxY + (long)m_calData.accelMinY) / 2;
        accelOffset[2] = -((long)m_calData.accelMaxZ + (long)m_calData.accelMinZ) / 2;
-#ifdef MPULIB_DEBUG
-	   Serial.print("Accel offsets: x=");
-       Serial.print(accelOffset[0]); Serial.print(" y=");
-       Serial.print(accelOffset[1]); Serial.print(" z=");
-       Serial.println(accelOffset[2]);
-#endif
+
 	   mpu_set_accel_bias(accelOffset);
+
+       m_accelXRange = m_calData.accelMaxX + accelOffset[0];
+       m_accelYRange = m_calData.accelMaxY + accelOffset[1];
+       m_accelZRange = m_calData.accelMaxZ + accelOffset[2];
      }
   }
 
@@ -257,8 +258,20 @@ boolean MPU9150Lib::read()
       m_calMag[VEC3_Y] = -m_rawMag[VEC3_X];
       m_calMag[VEC3_X] = m_rawMag[VEC3_Y];
       m_calMag[VEC3_Z] = m_rawMag[VEC3_Z];
-	}
-	dataFusion();
+    }
+
+    // Scale accel data 
+
+    if (m_useAccelCalibration) {
+      m_calAccel[VEC3_X] = -(short)(((long)m_rawAccel[VEC3_X] * (long)SENSOR_RANGE) / (long)m_accelXRange);
+      m_calAccel[VEC3_Y] = (short)(((long)m_rawAccel[VEC3_Y] * (long)SENSOR_RANGE) / (long)m_accelYRange);
+      m_calAccel[VEC3_Z] = (short)(((long)m_rawAccel[VEC3_Z] * (long)SENSOR_RANGE) / (long)m_accelZRange);
+    } else {
+      m_calAccel[VEC3_X] = -m_rawAccel[VEC3_X];
+      m_calAccel[VEC3_Y] = m_rawAccel[VEC3_Y];
+      m_calAccel[VEC3_Z] = m_rawAccel[VEC3_Z];
+    }
+    dataFusion();
     return true;
 }
 

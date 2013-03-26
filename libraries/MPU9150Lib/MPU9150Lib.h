@@ -28,7 +28,7 @@
 #include "MPUQuaternion.h"
 #include "CalLib.h"
 
-//  Define this synbol to get debug info
+//  Define this symbol to get debug info
 
 #define MPULIB_DEBUG
 
@@ -85,6 +85,7 @@ public:
   
   float m_dmpQuaternion[4];                                 // float and normalized version of the dmp quaternion
   float m_dmpEulerPose[3];                                  // Euler angles from the DMP quaternion
+  short m_calAccel[3];                                      // calibrated and scaled accel data
   short m_calMag[3];                                        // calibrated mag data
 
   // these variables are the fused results
@@ -110,6 +111,10 @@ private:
   short m_magYRange;										// range of mag Y
   short m_magZOffset;										// offset to be structed for mag Z
   short m_magZRange;										// range of mag Z
+
+  short m_accelXRange;										// range of accel X
+  short m_accelYRange;										// range of accel Y
+  short m_accelZRange;										// range of accel Z
 };
 
 #endif // _MPU9150LIB_H_
