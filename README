@@ -1,0 +1,7 @@
+MPU9150Lib is an implementation of 9-axis data fusion on an Arduino using the InvenSense MPU-9150 IMU. See MPU9150Lib.pdf for details.
+
+This is the initial version of the MPU9150Lib software.
+
+For more information, see www.pansenti.com,  pansenti.wordpress.com and twitter.com/Pansenti.
+
+Pansenti can be contacted by emailing to info@pansenti.com.
